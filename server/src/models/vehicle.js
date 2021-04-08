@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const itemSchema = mongoose.Schema({
+const vehicleSchema = mongoose.Schema({
   userId: String,
   name: { type: String, required: true },
   price: { type: String, required: true },
@@ -11,6 +11,6 @@ const itemSchema = mongoose.Schema({
   rating: Number,
 });
 
-const itemModel = mongoose.model("items", itemSchema);
+const vehicleModel = mongoose.model("vehicles", vehicleSchema);
 
-module.exports = itemModel;
+module.exports = vehicleModel;
