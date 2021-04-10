@@ -1,57 +1,73 @@
 import React, {useState, useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   View,
-  ScrollView,
   Text,
-  TextInput,
   StyleSheet,
   ImageBackground,
   SafeAreaView,
-  ToastAndroid,
+  ScrollView,
+  TextInput,
   TouchableOpacity,
+  ToastAndroid,
 } from 'react-native';
-import {useSelector, useDispatch} from 'react-redux';
-import {login} from '../../redux/actions/login';
 
-import LoginBackground from '../../images/login-background.png';
+import {register} from '../../redux/actions/register';
+import RegisterBackground from '../../images/register-background.png';
 
-const Login = ({navigation}) => {
-  const [username, setUsername] = useState('');
+const Register = ({navigation}) => {
+  const [email, setEmail] = useState('');
+  const [fullname, setFullname] = useState('');
   const [password, setPassword] = useState('');
-  const form = {email: username, password: password};
-  const {token, isLogin, error} = useSelector(state => state.login);
   const dispatch = useDispatch();
+  const {isFailed, isSuccess, message} = useSelector(state => state.register);
+  const form = {email: email, fullname: fullname, password: password};
 
-  useEffect(() => {
-    if (token && isLogin) {
-      ToastAndroid.show('Login Success', ToastAndroid.SHORT);
-    } else {
-      ToastAndroid.show(error, ToastAndroid.SHORT);
+  const navigateLogin = () => navigation.navigate('Login');
+
+  const submitRegister = async e => {
+    e.preventDefault();
+    dispatch(register(form));
+    setEmail('');
+
+    if (isFailed) {
+      ToastAndroid.show(message, ToastAndroid.SHORT);
+    } else if (isSuccess) {
+      ToastAndroid.show(message, ToastAndroid.SHORT);
+      navigateLogin();
     }
-  }, [token]);
-
-  const onSubmit = async () => {
-    dispatch(login(form));
   };
   return (
-    <ImageBackground source={LoginBackground} style={styles.containerBg}>
+    <ImageBackground style={styles.containerBg} source={RegisterBackground}>
       <SafeAreaView style={styles.container}>
         <ScrollView showsVerticalScrollIndicator={false}>
           <View style={{marginTop: '40%'}}>
-            <Text style={styles.loginTitle}>LET’S EXPLORE</Text>
-            <Text style={styles.loginTitle}>THE WORLD</Text>
+            <Text style={styles.loginTitle}>LET'S HAVE</Text>
+            <Text style={styles.loginTitle}>SOME RIDE</Text>
           </View>
-          {/* Login Form */}
+          {/* Register Form */}
           <View style={{marginTop: '50%'}}>
             <View style={styles.loginBg}>
               <TextInput
-                placeholder="Username"
-                value={username}
-                onChangeText={text => setUsername(text)}
+                placeholder="Email"
+                value={email}
+                onChangeText={text => setEmail(text)}
+                returnKeyType="next"
+                keyboardType="email-address"
+                autoCapitalize="none"
+                style={styles.loginText}
+                placeholderTextColor="#FFF"
+              />
+            </View>
+            <View style={styles.loginBg}>
+              <TextInput
+                placeholder="Fullname"
+                value={fullname}
+                onChangeText={text => setFullname(text)}
                 returnKeyType="next"
                 autoCapitalize="none"
                 style={styles.loginText}
-                placeholderTextColor="#FFFFFF"
+                placeholderTextColor="#FFF"
               />
             </View>
             <View style={styles.loginBg}>
@@ -63,25 +79,22 @@ const Login = ({navigation}) => {
                 autoCapitalize="none"
                 secureTextEntry={true}
                 style={styles.loginText}
-                placeholderTextColor="#FFFFFF"
+                placeholderTextColor="#FFF"
               />
             </View>
           </View>
-          {/* Forgot Password Text */}
+          {/* Register Button */}
           <TouchableOpacity
-            onPress={() => navigation.navigate('Forgot Password')}>
-            <Text style={styles.forgotPassword}>Forgot Password?</Text>
+            onPress={submitRegister}
+            style={styles.loginButtonBg}>
+            <Text style={styles.loginButtonText}>Sign Up</Text>
           </TouchableOpacity>
-          {/* Login Button */}
-          <TouchableOpacity onPress={onSubmit} style={styles.loginButtonBg}>
-            <Text style={styles.loginButtonText}>Login</Text>
-          </TouchableOpacity>
-          {/* Sign Up */}
+          {/* Login */}
           <TouchableOpacity
-            onPress={() => navigation.navigate('Register')}
+            onPress={() => navigation.navigate('Login')}
             style={styles.signUpContainer}>
-            <Text style={styles.signUp}>Don't have account?</Text>
-            <Text style={styles.signupBold}>Sign up now</Text>
+            <Text style={styles.signUp}>Already have an account?</Text>
+            <Text style={styles.signupBold}>Login now</Text>
           </TouchableOpacity>
         </ScrollView>
       </SafeAreaView>
@@ -89,7 +102,7 @@ const Login = ({navigation}) => {
   );
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
   container: {
