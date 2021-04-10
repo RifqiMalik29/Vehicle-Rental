@@ -99,6 +99,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 36,
     color: '#FFFFFF',
+    fontFamily: 'Roboto-Regular',
   },
   loginBg: {
     backgroundColor: '#DFDEDE',
@@ -111,6 +112,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#FFFFFF',
     padding: 15,
+    fontFamily: 'Nunito-Regular',
   },
   forgotPassword: {
     fontSize: 14,
@@ -118,6 +120,7 @@ const styles = StyleSheet.create({
     textDecorationColor: '#FFF',
     color: '#FFF',
     marginTop: 15,
+    fontFamily: 'Nunito-Regular',
   },
   loginButtonBg: {
     backgroundColor: '#FFCD61',
@@ -133,6 +136,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#393939',
     padding: 17,
+    fontFamily: 'Nunito-Regular',
   },
   signUpContainer: {
     width: '100%',
@@ -145,11 +149,15 @@ const styles = StyleSheet.create({
   signUp: {
     fontSize: 14,
     color: '#FFF',
+    fontFamily: 'Nunito-Regular',
   },
   signupBold: {
     fontSize: 14,
     color: '#FFF',
     textDecorationLine: 'underline',
     textDecorationColor: '#FFF',
+    fontFamily: 'Nunito-Regular',
+    fontWeight: 'bold',
+    marginLeft: 5,
   },
 });
