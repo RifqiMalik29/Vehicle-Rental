@@ -8,6 +8,7 @@ const userSchema = mongoose.Schema({
   dateOfBirth: String,
   deliveryAddress: String,
   photo: String,
+  role: { type: Number, default: 5 },
 });
 
 const userModel = mongoose.model("users", userSchema);
