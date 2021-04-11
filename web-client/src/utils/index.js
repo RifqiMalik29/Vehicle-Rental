@@ -1,1 +1,1 @@
-export const URI = "http://localhost:8000/api/rental/v1";
+export const URI = "https://vehiclerentalarkademy.herokuapp.com/api/rental/v1";
