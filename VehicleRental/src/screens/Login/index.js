@@ -19,7 +19,7 @@ const Login = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const form = {email: username, password: password};
-  const {token, isLogin, error} = useSelector(state => state.login);
+  const {token, isLogin, error, loading} = useSelector(state => state.login);
   const dispatch = useDispatch();
 
   useEffect(() => {
