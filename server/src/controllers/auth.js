@@ -21,6 +21,7 @@ module.exports = {
           response(res, 400, { message: "Invalid Credentials" });
         } else {
           const {
+            _id,
             fullname,
             email,
             phone,
@@ -30,6 +31,7 @@ module.exports = {
           } = result;
           const token = jwt.sign(
             {
+              _id,
               fullname,
               email,
               phone,
