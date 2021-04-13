@@ -74,7 +74,11 @@ const Login = ({navigation}) => {
           </TouchableOpacity>
           {/* Login Button */}
           <TouchableOpacity onPress={onSubmit} style={styles.loginButtonBg}>
-            <Text style={styles.loginButtonText}>Login</Text>
+            {loading == true ? (
+              <Text style={styles.loginButtonText}>Loading ...</Text>
+            ) : (
+              <Text style={styles.loginButtonText}>Login</Text>
+            )}
           </TouchableOpacity>
           {/* Sign Up */}
           <TouchableOpacity

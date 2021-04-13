@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useRef} from 'react';
 import {
   Alert,
   Image,
@@ -12,6 +12,9 @@ import {
   View,
 } from 'react-native';
 import {Avatar} from 'react-native-paper';
+import Animated from 'react-native-reanimated';
+import BottomSheet from 'reanimated-bottom-sheet';
+import * as ImagePicker from 'react-native-image-picker';
 
 import Navigation from '../../../components/Navigation';
 import AddItemInputCenter from '../../../components/AddItemInputCenter';
@@ -35,6 +38,10 @@ const AddNewItem = ({navigation}) => {
     stock: stock,
   };
   const [stockInput, setStockInput] = useState(false);
+  const [imageSize, setImageSize] = useState(null);
+  console.log(form);
+  const bs = useRef();
+  const fall = new Animated.Value(1);
 
   const minusButton = () => setStock(stock - 1);
 
@@ -59,6 +66,63 @@ const AddNewItem = ({navigation}) => {
     }
   };
 
+  const choosePhotoFromGallery = () => {
+    ImagePicker.launchImageLibrary(
+      {
+        mediaType: 'photo',
+      },
+      response => {
+        setPhoto(response.uri);
+        setImageSize(response.fileSize);
+      },
+    );
+  };
+
+  const takeFromCamera = () => {
+    ImagePicker.launchCamera(
+      {
+        mediaType: 'photo',
+      },
+      response => {
+        setPhoto(response.uri);
+        setImageSize(response.fileSize);
+      },
+    );
+  };
+
+  const renderContent = () => (
+    <View style={styles.bottomSheetContainer}>
+      <View>
+        <Text style={styles.stockTitle}>Upload Image</Text>
+      </View>
+      <View style={{alignItems: 'center'}}>
+        <TouchableOpacity
+          onPress={choosePhotoFromGallery}
+          style={styles.bottomSheetButton}>
+          <Text style={styles.addPicturesText}>Choose from Gallery</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={takeFromCamera}
+          style={styles.bottomSheetButton}>
+          <Text style={styles.addPicturesText}>Take from Camera</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => bs.current.snapTo(1)}
+          style={styles.bottomSheetButton}>
+          <Text style={styles.addPicturesText}>Cancel</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+
+  const renderHeader = () => (
+    <View style={styles.header}>
+      <View style={styles.panelHeader}>
+        <View style={styles.panelHandle} />
+      </View>
+    </View>
+  );
+
   return (
     <SafeAreaView style={{flex: 1}}>
       <View style={styles.topNavigationContainer}>
@@ -69,24 +133,31 @@ const AddNewItem = ({navigation}) => {
           <Text style={styles.addItemText}>Add new item</Text>
         </TouchableOpacity>
         <TouchableOpacity onPress={cancelAddItemhandler}>
-          <Text style={styles.cancelText}>Cancel</Text>
+          <Text style={styles.cancelText}>Close</Text>
         </TouchableOpacity>
       </View>
       <ScrollView showsVerticalScrollIndicator={false}>
         <SafeAreaView style={styles.addItemContainer}>
           <View>
             {photo ? (
-              <Avatar.Image
-                size={150}
-                source={require('../../../images/login-background.png')}
-              />
+              <Avatar.Image size={150} source={{uri: photo}} />
             ) : (
               <View style={styles.photoBg}>
                 <Image source={require('../../../images/camera.png')} />
               </View>
             )}
           </View>
-          <TouchableOpacity style={styles.addPicturesBg}>
+          {/* {imageSize > 5024 && photo ? (
+            <View>
+              <Text>Image size is too large</Text>
+              <Text>Image must be smaller than 5 mb</Text>
+            </View>
+          ) : (
+            <Text>OK!</Text>
+          )} */}
+          <TouchableOpacity
+            onPress={() => bs.current.snapTo(0)}
+            style={styles.addPicturesBg}>
             <Text style={styles.addPicturesText}>Add pictures</Text>
           </TouchableOpacity>
           <AddItemInputCenter
@@ -165,6 +236,17 @@ const AddNewItem = ({navigation}) => {
         </SafeAreaView>
       </ScrollView>
       <Navigation active={1} />
+      <BottomSheet
+        renderContent={renderContent}
+        renderHeader={renderHeader}
+        ref={bs}
+        snapPoints={[360, 0]}
+        initialSnap={1}
+        callbackNode={fall}
+        enabledGestureInteraction
+        enabledContentGestureInteraction={false}
+        enabledContentTapInteraction
+      />
     </SafeAreaView>
   );
 };
@@ -259,5 +341,39 @@ const styles = StyleSheet.create({
     width: '90%',
     alignItems: 'center',
     marginTop: 30,
+  },
+  bottomSheetContainer: {
+    backgroundColor: '#FFF',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'space-evenly',
+  },
+  bottomSheetButton: {
+    backgroundColor: '#393939',
+    borderRadius: 10,
+    width: '100%',
+    marginVertical: 7,
+    display: 'flex',
+    alignItems: 'center',
+  },
+  header: {
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#333333',
+    shadowOffset: {width: -1, height: -3},
+    shadowRadius: 2,
+    shadowOpacity: 0.4,
+    paddingTop: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  panelHeader: {
+    alignItems: 'center',
+  },
+  panelHandle: {
+    width: 40,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#00000040',
+    marginBottom: 10,
   },
 });
