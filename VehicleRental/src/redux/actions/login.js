@@ -29,7 +29,7 @@ export const logout = () => {
 };
 
 export const login = data => async dispatch => {
-  request();
+  dispatch(request());
   try {
     const result = await axios.post(`${URI}/auth/login`, data);
     dispatch(loginSuccess(result.data.data.token));

@@ -23,7 +23,7 @@ export const registerFailed = error => {
 };
 
 export const register = setData => async dispatch => {
-  request();
+  dispatch(request());
   try {
     const result = await axios.post(`${URI}/auth/register`, setData);
     dispatch(registerSuccess(result.data.message));
