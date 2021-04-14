@@ -18,6 +18,8 @@ app.use(cors());
 app.use("/api/rental/v1", routers);
 app.use("/api/rental/admin/v1", adminRouter);
 
+app.use(express.static("public/uploads"));
+
 mongoose
   .connect(URL, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() =>
