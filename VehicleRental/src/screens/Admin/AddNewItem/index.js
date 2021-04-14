@@ -1,4 +1,5 @@
 import React, {useState, useRef} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
 import {
   Alert,
   Image,
@@ -20,28 +21,31 @@ import Navigation from '../../../components/Navigation';
 import AddItemInputCenter from '../../../components/AddItemInputCenter';
 import AddItemInput from '../../../components/AddItemInput';
 
+import {addVehicle} from '../../../redux/actions/admin/vehicle';
+
 const AddNewItem = ({navigation}) => {
   const [photo, setPhoto] = useState('');
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [location, setLocation] = useState('');
-  const [category, setCategory] = useState('');
+  const [location, setLocation] = useState('Malang');
+  const [category, setCategory] = useState('Human');
   const [stock, setStock] = useState(0);
-  const form = {
-    photo: photo,
-    name: name,
-    price: price,
-    description: description,
-    location: location,
-    category: category,
-    stock: stock,
-  };
+  // const form = {
+  //   photo: photo,
+  //   name: name,
+  //   price: price,
+  //   description: description,
+  //   location: location,
+  //   category: category,
+  //   stock: stock,
+  // };
   const [stockInput, setStockInput] = useState(false);
-  const [imageSize, setImageSize] = useState(null);
-  console.log(form);
+  const [imageData, setImageData] = useState(null);
   const bs = useRef();
   const fall = new Animated.Value(1);
+  const dispatch = useDispatch();
+  const {token} = useSelector(state => state.login);
 
   const minusButton = () => setStock(stock - 1);
 
@@ -72,8 +76,8 @@ const AddNewItem = ({navigation}) => {
         mediaType: 'photo',
       },
       response => {
+        setImageData(response);
         setPhoto(response.uri);
-        setImageSize(response.fileSize);
       },
     );
   };
@@ -85,9 +89,24 @@ const AddNewItem = ({navigation}) => {
       },
       response => {
         setPhoto(response.uri);
-        setImageSize(response.fileSize);
       },
     );
+  };
+
+  const submitForm = () => {
+    const formData = new FormData();
+    formData.append('photo', {
+      uri: imageData.uri,
+      name: imageData.fileName,
+      type: imageData.type,
+    });
+    formData.append('category', category);
+    formData.append('description', description);
+    formData.append('location', location);
+    formData.append('name', name);
+    formData.append('price', price);
+    formData.append('stock', stock);
+    dispatch(addVehicle(formData, token));
   };
 
   const renderContent = () => (
@@ -230,7 +249,9 @@ const AddNewItem = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <TouchableOpacity style={styles.saveProductButton}>
+          <TouchableOpacity
+            onPress={submitForm}
+            style={styles.saveProductButton}>
             <Text style={styles.stockTitle}>Save product</Text>
           </TouchableOpacity>
         </SafeAreaView>
