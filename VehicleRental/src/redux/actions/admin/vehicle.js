@@ -35,8 +35,12 @@ export const getAllVehicle = () => async dispatch => {
   dispatch({type: REQUEST});
   try {
     const result = await axios.get(`${ADMIN_URI}/vehicle`);
-    console.log(result);
+    dispatch({type: ADMIN_GET_ALL_VEHICLES_SUCESS, payload: result.data.data});
+    console.log(result, 'ADD VEHICLE');
   } catch (error) {
-    console.log(error.response.data.data.message);
+    dispatch({
+      type: ADMIN_GET_ALL_VEHICLES_FAILED,
+      payload: error.response.data.data.message,
+    });
   }
 };

@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,20 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
+import {useSelector, useDispatch} from 'react-redux';
+import {IMAGE_URI} from '../../../utils';
 
 import Navigation from '../../../components/Navigation';
+import {getAllVehicle} from '../../../redux/actions/admin/vehicle';
 
 const AdminHome = ({navigation}) => {
   const [search, setSearch] = useState('');
+  const dispatch = useDispatch();
+  const {vehicleData} = useSelector(state => state.adminVehicle);
+
+  useEffect(() => {
+    dispatch(getAllVehicle());
+  }, []);
   return (
     <SafeAreaView style={{flex: 1}}>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -46,6 +55,26 @@ const AdminHome = ({navigation}) => {
               <TouchableOpacity>
                 <Text style={styles.viewMoreText}>View more</Text>
               </TouchableOpacity>
+            </View>
+            <View>
+              {vehicleData ? (
+                <ScrollView
+                  horizontal={true}
+                  showsHorizontalScrollIndicator={false}>
+                  {vehicleData.map((item, index) => (
+                    <SafeAreaView>
+                      <Image
+                        source={{uri: IMAGE_URI + item.photo}}
+                        style={styles.recImage}
+                      />
+                    </SafeAreaView>
+                  ))}
+                </ScrollView>
+              ) : (
+                <View>
+                  <Text>No Recomended</Text>
+                </View>
+              )}
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('AdminAddItem')}
@@ -153,5 +182,12 @@ const styles = StyleSheet.create({
     color: '#FFCD61',
     padding: 17,
     fontFamily: 'Nunito-Regular',
+  },
+  recImage: {
+    width: 265,
+    height: 168,
+    borderRadius: 15,
+    marginHorizontal: 5,
+    marginTop: 15,
   },
 });
