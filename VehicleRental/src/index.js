@@ -10,6 +10,9 @@ import ForgotPassword from './screens/ForgotPassword';
 
 import AdminHome from './screens/Admin/Home';
 import AdminAddItem from './screens/Admin/AddNewItem';
+import AdminEditItem from './screens/Admin/EditItem';
+import ChatAdmin from './screens/Admin/ChatAdmin';
+
 import {logout} from './redux/actions/login';
 
 const Stack = createStackNavigator();
@@ -30,7 +33,7 @@ const MainNavigator = () => {
   return (
     <NavigationContainer>
       {loginState.token && loginState.isLogin == true ? (
-        <Stack.Navigator>
+        <Stack.Navigator initialRouteName="ChatAdmin">
           <Stack.Screen
             name="AdminHome"
             component={AdminHome}
@@ -39,6 +42,16 @@ const MainNavigator = () => {
           <Stack.Screen
             name="AdminAddItem"
             component={AdminAddItem}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="AdminEditItem"
+            component={AdminEditItem}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="ChatAdmin"
+            component={ChatAdmin}
             options={{headerShown: false}}
           />
         </Stack.Navigator>
